@@ -7,7 +7,7 @@
 
   *Existing tools report numbers. EdgeBench reports a deployment decision.*
 
-  **[Demo Video Link]** | **[GitHub Repository Link]**
+  **[Demo Video Link]** | **[GitHub Repository Link](https://github.com/surajsaggam/EdgeBench-AI.git)**
 </div>
 
 ---
@@ -115,6 +115,6 @@ EdgeBench was designed specifically for the operational realities of shipping AI
 ---
 
 ### Team
-* **[Name 1]** 
-* **[Name 2]** 
-* **[Name 3]**
+* **[Rishabh Shah]** 
+* **[Anuj Pethe]** 
+* **[Suraj Saggam]**
