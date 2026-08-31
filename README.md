@@ -115,6 +115,6 @@ EdgeBench was designed specifically for the operational realities of shipping AI
 ---
 
 ### Team
-* **[Rishabh Shah]** 
-* **[Anuj Pethe]** 
-* **[Suraj Saggam]**
+* **Rishabh Shah** 
+* **Anuj Pethe** 
+* **Suraj Saggam**
