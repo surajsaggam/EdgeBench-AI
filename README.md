@@ -1,7 +1,5 @@
 <div align="center">
-  <img src="https://via.placeholder.com/150x150.png?text=EdgeBench+AI+Logo" alt="EdgeBench AI Logo" width="120" height="120">
-
-  # EdgeBench AI
+  <h1>📱 EdgeBench AI</h1>
   **An On-Device Diagnostic Profiling & Optimization Workbench for Android AI Models**
 
   [![Hackathon](https://img.shields.io/badge/iQOO_Hackathon_2026-City_Battle_Pune-blue.svg)](#)
@@ -60,10 +58,21 @@ EdgeBench synthesizes the evidence and generates the exact Kotlin delegate-initi
 
 ## 🛠️ The Intelligent Diagnostic Pipeline
 
-<div align="center">
-  <!-- JUDGES: Imagine a sleek, vertical pipeline architecture diagram here -->
-  <img src="https://via.placeholder.com/800x250.png?text=Pipeline+Architecture:+Model+Ingestion+%E2%86%92+Telemetry+%E2%86%92+Scoring+%E2%86%92+Kotlin+Gen" alt="EdgeBench Diagnostic Pipeline">
-</div>
+```mermaid
+graph TD
+    A[📦 Model Ingestion<br>TFLite / ONNX] --> B(⚡ Multi-Backend Benchmarking<br>CPU / GPU / NPU)
+    B --> C(📊 Hardware Telemetry<br>Latency / Thermal / Power)
+    C --> D(🔍 Operator Compatibility<br>Fallback Detection)
+    D --> E(💯 Device Fit Scoring<br>Deterministic 0-100 Verdict)
+    E --> F[⚙️ Recommendation & Code Gen<br>Ready-to-deploy Kotlin]
+
+    style A fill:#2d3748,stroke:#4fd1c5,stroke-width:2px,color:#fff
+    style B fill:#2d3748,stroke:#63b3ed,stroke-width:2px,color:#fff
+    style C fill:#2d3748,stroke:#f6ad55,stroke-width:2px,color:#fff
+    style D fill:#2d3748,stroke:#fc8181,stroke-width:2px,color:#fff
+    style E fill:#2d3748,stroke:#9f7aea,stroke-width:2px,color:#fff
+    style F fill:#4fd1c5,stroke:#fff,stroke-width:2px,color:#1a202c
+```
 
 1. **Model Ingestion**: Load `.tflite` / `.onnx`, validate schema & metadata.
 2. **Multi-Backend Benchmarking**: Warm-up + steady-state loops across CPU / GPU / NPU.
@@ -101,10 +110,7 @@ EdgeBench was designed specifically for the operational realities of shipping AI
 * **NPU Integration**: Directly exercises and profiles the Hexagon NPU via NNAPI/QNN.
 * **Zero-Cloud Architecture**: Model ingestion, profiling, and recommendation generation happen 100% offline.
 
-<div align="center">
-  <!-- JUDGES: Add 2-3 screenshots of the beautiful Jetpack Compose UI running on the iQOO device here -->
-  <img src="https://via.placeholder.com/800x350.png?text=Screenshots+of+EdgeBench+Running+On-Device+(Live+Telemetry+%26+Dashboard)" alt="EdgeBench App Screenshots">
-</div>
+> 📸 **Note for Submission:** Please add 2-3 screenshots of the Jetpack Compose UI running live on the iQOO device here to showcase the on-device capabilities.
 
 ---
 
