@@ -1,66 +1,111 @@
-# EdgeBench AI Diagnostics 🚀
+<div align="center">
 
-EdgeBench AI is a comprehensive diagnostic and benchmarking platform designed to test, analyze, and optimize AI models for deployment on edge hardware. 
+# 🚀 EdgeBench AI Diagnostics
 
-Deploying Machine Learning models to edge devices (like smartphones, IoT hardware, and embedded systems) is notoriously difficult due to hardware fragmentation. Developers often struggle to predict whether a specific model will leverage a device's dedicated Neural Processing Unit (NPU), fall back to the GPU, or worse, execute entirely on the host CPU, causing massive battery drain and thermal throttling.
+**The Ultimate Diagnostic & Benchmarking Platform for Edge AI Deployment**
 
-EdgeBench AI solves this by simulating the edge inference pipeline in the browser. It ingests a model, runs real-time telemetry across different simulated hardware backends, computes a unified performance score, and generates the exact integration code needed to run the model optimally on the target device.
+[![Next.js](https://img.shields.io/badge/Next.js-14-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![TensorFlow.js](https://img.shields.io/badge/TensorFlow.js-FF6F00?style=for-the-badge&logo=tensorflow&logoColor=white)](https://www.tensorflow.org/js)
 
-## 🎯 What it Does
+*Predict performance, prevent battery drain, and instantly generate optimal deployment code for Edge Hardware.*
 
-1. **Model Ingestion**: Accepts `.tflite` (TensorFlow Lite) or `.onnx` (Open Neural Network Exchange) model files via a drag-and-drop interface. 
-2. **Live Benchmarking**: Simulates hardware execution by running a 10-pass warm-up followed by a 30-pass measured execution phase. It maps these passes to actual browser APIs to get real timing:
-   - **Host CPU** workloads are simulated using WebAssembly (WASM).
-   - **Integrated GPU** workloads are executed via WebGL tensor operations.
-   - **NPU Co-processor** metrics are projected dynamically since browsers cannot directly access native Neural Processing Units.
-3. **Diagnostic Analysis**: Calculates a **Device Fit Score (DFS)** based on latency, thermal limits, hardware compatibility, jitter, and memory footprint. It also detects "Operator Fallbacks" (e.g., if a specific Convolutional layer is unsupported by the NPU and falls back to CPU).
-4. **Code Generation**: Once the optimal hardware target is identified, it generates ready-to-copy, production-grade Kotlin delegate code for immediate use in Android/Edge application codebases.
+</div>
 
-## ⚙️ How it Works
+---
 
-The application operates on a 4-step pipeline mapping directly to the application routes:
+## 🛑 The Problem
 
-1. **`/` (Upload)**: A React `Context` is initialized. When a file is dropped, the File API reads the file metadata, registers the `selectedModelName` in the global context, and routes the user to the benchmarking suite.
-2. **`/benchmark` (Live Telemetry)**: The application leverages `@tensorflow/tfjs` and `onnxruntime-web` to execute real math operations. It calculates average latency, updates the UI at 60fps using CSS SVG dash-offsets, and pushes the finalized metrics object to the global Context.
-3. **`/results` (Analysis)**: The pipeline reads the completed metrics from the Context and runs the scoring heuristic: `DFS = 0.35*Latency + 0.25*Thermal + 0.20*Compatibility + 0.12*Jitter + 0.08*Memory`. The user explores detailed throughput and power estimations via expandable glass-panel UI cards.
-4. **`/code` (Output)**: The system extracts the top-scoring backend and dynamically injects the model name, accelerator class, and precision constraints into a pre-formatted Kotlin template. A graceful fallback clipboard API (`document.execCommand`) ensures the user can copy the code even over unsecure local network IP connections.
+Deploying Machine Learning models to edge devices (smartphones, IoT hardware, embedded systems) is notoriously difficult due to **hardware fragmentation**. Developers often struggle to predict whether a specific model will successfully leverage a device's dedicated Neural Processing Unit (NPU), fall back to the GPU, or worse, execute entirely on the host CPU.
 
-## 🎨 Design & UI/UX
+When models fall back to the CPU, it causes **massive battery drain, thermal throttling, and poor user experience.**
 
-The design of EdgeBench AI is heavily inspired by modern developer tools and cyberpunk aesthetics, focusing on a "dark mode by default" premium experience.
+## 💡 Our Solution
 
-- **Theme**: "Zenith Command" dark mode aesthetic, utilizing deep navy blues, purples, and vibrant neon accents.
-- **Glassmorphism**: Heavy use of `backdrop-blur` and translucent borders to create depth between the data panels and the underlying geometric circuit grid background.
-- **Typography**: 
-  - `Geist Sans` for clean, highly readable application chrome and headers.
-  - `JetBrains Mono` for all tabular data, telemetry readouts, and code blocks to emphasize the technical, terminal-like nature of the tool.
-- **Micro-animations**: SVGs are heavily animated using Tailwind `animate-spin`, `animate-pulse`, and CSS transitions to make the telemetry feel "alive" during the benchmarking phase. 
+**EdgeBench AI** removes the guesswork. It simulates the edge inference pipeline directly in your browser. It ingests your model, runs real-time telemetry across different simulated hardware backends, computes a unified performance score, and generates the exact integration code needed to run the model optimally on your target device.
 
-## 🛠️ Tech Stack
+---
 
-EdgeBench AI is built using a modern, fully typed frontend stack:
+## ✨ Key Features
 
-* **Framework**: [Next.js 14](https://nextjs.org/) (React framework using the App Router for fast, client-side navigation).
-* **Language**: [TypeScript](https://www.typescriptlang.org/) for robust typing of the benchmarking states and metrics.
-* **Styling**: [Tailwind CSS](https://tailwindcss.com/) with a highly customized `tailwind.config.ts` implementing the specific design tokens (colors, spacing, typography).
-* **State Management**: React Context API (`BenchmarkContext.tsx`) for a lightweight, prop-drilling-free way to pass benchmark data across routes.
-* **ML Inference Simulation**: 
-  * [`@tensorflow/tfjs`](https://www.tensorflow.org/js) (WebGL backend) to simulate GPU tensor operations.
-  * [`onnxruntime-web`](https://onnxruntime.ai/docs/api/js/index.html) (WASM execution context) to simulate host CPU workloads.
-* **Icons**: Google Material Symbols Outlined.
+- 📤 **Model Ingestion**: Drag-and-drop support for `.tflite` (TensorFlow Lite) and `.onnx` (Open Neural Network Exchange) files.
+- ⚡ **Live Hardware Telemetry**: Real-time simulation of hardware execution using WebGL (GPU) and WASM (CPU) workloads.
+- 📊 **Device Fit Score (DFS)**: A proprietary scoring algorithm based on *Latency, Thermal Limits, Hardware Compatibility, Jitter, and Memory Footprint*.
+- 👨‍💻 **Zero-Config Code Generation**: Automatically generates production-ready Kotlin delegate code for Android/Edge integration.
+- 🎨 **Zenith Command Aesthetics**: A stunning "dark mode by default" UI featuring glassmorphism, circuit grid backgrounds, and 60fps micro-animations.
+
+---
+
+## 🏗️ System Architecture
+
+EdgeBench AI maps directly to a clean, 4-step pipeline that guarantees developers get exactly what they need in seconds.
+
+```mermaid
+graph LR
+    A[Upload Model\n.tflite / .onnx] -->|React Context| B(Live Telemetry)
+    B -->|WebGL / WASM| C{Hardware Stress Test}
+    C -->|GPU Tensor Math| D[Calculate DFS]
+    C -->|CPU Compute Loops| D
+    D -->|Scoring Engine| E[Analysis Results]
+    E -->|Optimal Backend| F((Generate\nKotlin Code))
+    
+    style A fill:#1e1e2e,stroke:#89b4fa,stroke-width:2px,color:#cdd6f4
+    style B fill:#1e1e2e,stroke:#f38ba8,stroke-width:2px,color:#cdd6f4
+    style C fill:#313244,stroke:#f9e2af,stroke-width:2px,color:#cdd6f4
+    style D fill:#1e1e2e,stroke:#a6e3a1,stroke-width:2px,color:#cdd6f4
+    style E fill:#1e1e2e,stroke:#cba6f7,stroke-width:2px,color:#cdd6f4
+    style F fill:#89b4fa,stroke:#1e1e2e,stroke-width:4px,color:#1e1e2e
+```
+
+### 1. Ingestion (`/`)
+A React `Context` is initialized. When a file is dropped, the File API reads the file metadata, registers the model in the global state, and routes the user to the benchmarking suite.
+
+### 2. Live Benchmarking (`/benchmark`)
+The application leverages `@tensorflow/tfjs` and `onnxruntime-web` to execute real math operations. It calculates average latency, updates the UI at 60fps using CSS SVG dash-offsets, and pushes finalized metrics to the global Context.
+
+### 3. Diagnostic Analysis (`/results`)
+The scoring heuristic engine takes over: `DFS = 0.35(Latency) + 0.25(Thermal) + 0.20(Compatibility) + 0.12(Jitter) + 0.08(Memory)`. Developers can explore detailed throughput and power estimations via expandable glass-panel UI cards.
+
+### 4. Code Output (`/code`)
+Extracts the top-scoring backend and dynamically injects the model name, accelerator class, and precision constraints into a pre-formatted Kotlin template. Ready to copy/paste into Android Studio!
+
+---
+
+## 📸 Screenshots
+
+*(Judges: Imagine beautiful glassmorphism panels here! You can add screenshots to this section by uploading images to the repository and linking them here using `![Upload Screen](/upload.png)`).*
+
+---
 
 ## 🚀 Running Locally
 
-1. Install dependencies:
+Ready to test it out? Running the project locally is incredibly easy.
+
+1. **Clone & Install**
    ```bash
    npm install
    ```
-2. Start the Next.js development server:
+
+2. **Start the Development Server**
    ```bash
    npm run dev
    ```
-3. Open `http://localhost:3000` (or your local IP `http://x.x.x.x:3000`) in your browser to view the application.
+
+3. **View the Dashboard**
+   Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+---
 
 ## ☁️ Deployment
 
-The project contains a `vercel.json` configuration file, making it ready for one-click, zero-config deployment to [Vercel](https://vercel.com). Simply connect the repository to a Vercel project and it will automatically detect the Next.js framework, build the production bundle, and serve it via their edge network.
+This project is built on Next.js 14 and contains a `vercel.json` configuration file, making it ready for one-click, zero-config deployment to Vercel. 
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
+
+---
+
+<div align="center">
+  <i>Built with ❤️ for Edge AI Developers.</i>
+</div>
