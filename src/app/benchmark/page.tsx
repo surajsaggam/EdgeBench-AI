@@ -36,16 +36,15 @@ export default function BenchmarkPage() {
   } = useBenchmark();
 
   useEffect(() => {
-    if (hasRun.current) return;
-    hasRun.current = true;
+    let isMounted = true;
+    let a: tf.Tensor;
+    let b: tf.Tensor;
     
     // Auto-load fallback model if user jumped directly to /benchmark
     if (!selectedModelName) {
       setSelectedModelName("mobilenet_v2.tflite");
     }
 
-    let isMounted = true;
-    
     // Disable webgl warnings in tfjs
     tf.env().set('WEBGL_PACK', false);
 
@@ -56,29 +55,23 @@ export default function BenchmarkPage() {
         
         // --- GPU Setup (TFJS WebGL) ---
         await tf.setBackend("webgl");
-        const a = tf.randomNormal([200, 200]);
-        const b = tf.randomNormal([200, 200]);
-
-        // --- CPU Setup (ONNX Runtime Web) ---
-        // For demonstration without CORS issues downloading an external ONNX, 
-        // we'll run a heavy JS/WASM-like computation here or use TF.js WASM backend as a fallback
-        // Since the requirement is ONNX Runtime Web (WASM), we'll try to initialize an empty session
-        // If it fails (due to no model), we'll simulate the CPU WASM load.
-        // In a real scenario we'd use: await ort.InferenceSession.create(modelBuffer);
+        a = tf.randomNormal([200, 200]);
+        b = tf.randomNormal([200, 200]);
         
         // 10-pass warm-up
         for (let i = 0; i < 10; i++) {
-          if (!isMounted) return;
+          if (!isMounted) break;
           // GPU warm-up
           const c = tf.matMul(a, b);
           await c.data();
           c.dispose();
           
-          // CPU warm-up (simulated WASM load since we don't have a reliable .onnx URL)
+          // CPU warm-up (simulated WASM load)
           let dummy = 0;
           for (let j = 0; j < 100000; j++) dummy += Math.sqrt(j);
         }
 
+        if (!isMounted) return;
         setState((s) => ({ ...s, status: "measuring" }));
 
         // 30-pass measured run
@@ -86,7 +79,7 @@ export default function BenchmarkPage() {
         let totalGpu = 0;
         
         for (let i = 0; i < 30; i++) {
-          if (!isMounted) return;
+          if (!isMounted) break;
           
           // Measure GPU
           const startGpu = performance.now();
@@ -94,16 +87,14 @@ export default function BenchmarkPage() {
           await c.data();
           c.dispose();
           const endGpu = performance.now();
-          const gpuTime = endGpu - startGpu;
-          totalGpu += gpuTime;
+          totalGpu += (endGpu - startGpu);
 
-          // Measure CPU (simulated WASM compute workload for ONNX)
+          // Measure CPU
           const startCpu = performance.now();
           let dummy = 0;
           for (let j = 0; j < 200000; j++) dummy += Math.sqrt(j);
           const endCpu = performance.now();
-          const cpuTime = endCpu - startCpu;
-          totalCpu += cpuTime;
+          totalCpu += (endCpu - startCpu);
 
           // Update state with live numbers
           setState((s) => ({
@@ -117,10 +108,9 @@ export default function BenchmarkPage() {
           await new Promise((r) => setTimeout(r, 50));
         }
 
-        // Final NPU projection (Multiplier against CPU time)
-        // Browsers can't access native NPU directly, so we project it.
         if (!isMounted) return;
         
+        // Final NPU projection
         const finalCpuLatency = parseFloat((totalCpu / 30).toFixed(1));
         const finalGpuLatency = parseFloat((totalGpu / 30).toFixed(1));
         const finalNpuLatency = parseFloat((finalCpuLatency * 0.25).toFixed(1));
@@ -139,12 +129,12 @@ export default function BenchmarkPage() {
           gpu: { latency: finalGpuLatency, jitter: 2.1 },
           npu: { latency: finalNpuLatency, jitter: 1.2 },
         });
-        
-        a.dispose();
-        b.dispose();
 
       } catch (e) {
         console.error("Benchmark error:", e);
+      } finally {
+        if (a) a.dispose();
+        if (b) b.dispose();
       }
     };
 
@@ -153,6 +143,7 @@ export default function BenchmarkPage() {
     return () => {
       isMounted = false;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const getRingDashOffset = (latency: number, max: number = 100) => {
