@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EdgeBench AI - Results</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-low": "#181c22",
+                        "inverse-primary": "#005ac2",
+                        "surface-tint": "#adc6ff",
+                        "secondary-fixed": "#e9ddff",
+                        "on-secondary-container": "#c4abff",
+                        "tertiary-fixed": "#ffdcc6",
+                        "surface-container": "#1c2026",
+                        "inverse-on-surface": "#2d3137",
+                        "primary": "#adc6ff",
+                        "on-primary": "#002e6a",
+                        "primary-fixed-dim": "#adc6ff",
+                        "on-secondary-fixed-variant": "#5516be",
+                        "background": "#10141a",
+                        "on-surface": "#dfe2eb",
+                        "surface": "#10141a",
+                        "on-secondary-fixed": "#23005c",
+                        "tertiary-fixed-dim": "#ffb786",
+                        "secondary-fixed-dim": "#d0bcff",
+                        "outline": "#8c909f",
+                        "on-tertiary-fixed-variant": "#723600",
+                        "secondary-container": "#571bc1",
+                        "error-container": "#93000a",
+                        "primary-container": "#4d8eff",
+                        "primary-fixed": "#d8e2ff",
+                        "surface-container-highest": "#31353c",
+                        "on-secondary": "#3c0091",
+                        "secondary": "#d0bcff",
+                        "on-background": "#dfe2eb",
+                        "surface-container-high": "#262a31",
+                        "outline-variant": "#424754",
+                        "surface-bright": "#353940",
+                        "on-surface-variant": "#c2c6d6",
+                        "error": "#ffb4ab",
+                        "on-primary-fixed": "#001a42",
+                        "on-primary-container": "#00285d",
+                        "on-tertiary-fixed": "#311400",
+                        "on-error": "#690005",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary-container": "#461f00",
+                        "tertiary-container": "#df7412",
+                        "surface-dim": "#10141a",
+                        "inverse-surface": "#dfe2eb",
+                        "surface-container-lowest": "#0a0e14",
+                        "on-primary-fixed-variant": "#004395",
+                        "on-tertiary": "#502400",
+                        "tertiary": "#ffb786",
+                        "surface-variant": "#31353c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "20px",
+                        "xl": "40px",
+                        "container-max": "1440px",
+                        "sm": "8px",
+                        "unit": "4px",
+                        "lg": "24px",
+                        "xs": "4px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Geist"],
+                        "mono-data": ["JetBrains Mono"],
+                        "display-lg": ["Geist"],
+                        "body-md": ["Geist"],
+                        "headline-sm": ["Geist"],
+                        "body-sm": ["Geist"],
+                        "mono-label": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "mono-data": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "500" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "mono-label": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Diagnostic Grid Background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: 
+                linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 24px 24px;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        /* Glass Panel Base */
+        .glass-panel {
+            background-color: rgba(22, 27, 34, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-bottom-color: rgba(255,255,255,0.06);
+            border-right-color: rgba(255,255,255,0.06);
+        }
+        
+        /* Details/Summary Customization */
+        details > summary {
+            list-style: none;
+        }
+        details > summary::-webkit-details-marker {
+            display: none;
+        }
+        details[open] summary ~ * {
+            animation: slideDown 0.3s ease-out;
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen flex flex-col font-body-md text-body-md selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="bg-surface-container/70 dark:bg-surface-container/70 backdrop-blur-xl border-b border-white/10 flat no shadows flex justify-between items-center w-full px-lg py-sm fixed top-0 z-50">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary dark:text-primary font-headline-sm text-headline-sm">terminal</span>
+<span class="font-headline-sm text-headline-sm font-bold text-on-surface dark:text-on-surface tracking-tight">EdgeBench AI</span>
+</div>
+<div>
+<div class="px-sm py-xs rounded-full border border-primary/30 bg-primary/10 flex items-center gap-xs">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+<span class="font-mono-label text-mono-label text-primary uppercase">LIVE</span>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow pt-24 pb-32 px-md md:px-lg max-w-container-max mx-auto w-full z-10 relative flex flex-col gap-xl">
+<!-- Hero Section: Device Fit Score -->
+<section class="flex flex-col items-center justify-center pt-lg pb-md">
+<div class="relative w-72 h-72 flex items-center justify-center">
+<!-- Radial Gauge SVG -->
+<svg class="absolute inset-0 w-full h-full transform -rotate-90" viewbox="0 0 100 100">
+<!-- Background Track -->
+<circle cx="50" cy="50" fill="none" r="45" stroke="rgba(255,255,255,0.05)" stroke-dasharray="283" stroke-dashoffset="0" stroke-width="4"></circle>
+<!-- Active Track (Value: 88%) -->
+<circle class="transition-all duration-1000 ease-out" cx="50" cy="50" fill="none" r="45" stroke="url(#score-gradient)" stroke-dasharray="283" stroke-dashoffset="34" stroke-linecap="round" stroke-width="4"></circle>
+<defs>
+<lineargradient id="score-gradient" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" stop-color="#adc6ff"></stop> <!-- primary -->
+<stop offset="100%" stop-color="#d0bcff"></stop> <!-- secondary -->
+</lineargradient>
+</defs>
+</svg>
+<!-- Inner Score Display -->
+<div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+<span class="font-mono-label text-mono-label text-on-surface-variant uppercase tracking-widest mb-unit opacity-80">Device Fit Score</span>
+<span class="font-display-lg text-display-lg bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent font-bold tabular-nums">88</span>
+</div>
+</div>
+</section>
+<!-- Detailed Cards: Backends -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-md">
+<!-- NPU Card -->
+<details class="glass-panel rounded-xl group" open="">
+<summary class="cursor-pointer p-md border-b border-white/5 flex items-center justify-between hover:bg-white/5 transition-colors">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">memory</span>
+<span class="font-headline-sm text-headline-sm">NPU Co-processor</span>
+</div>
+<div class="flex items-center gap-sm">
+<span class="font-mono-label text-mono-label px-2 py-1 rounded bg-secondary-container/30 text-secondary border border-secondary/20 uppercase">Primary</span>
+<span class="material-symbols-outlined text-on-surface-variant opacity-60 group-open:rotate-180 transition-transform">expand_more</span>
+</div>
+</summary>
+<div class="p-md flex flex-col gap-sm">
+<div class="flex justify-between items-center py-xs border-b border-white/5">
+<span class="font-mono-data text-mono-data text-on-surface-variant">Throughput</span>
+<span class="font-mono-data text-mono-data text-on-surface">142.5 FPS</span>
+</div>
+<div class="flex justify-between items-center py-xs border-b border-white/5">
+<span class="font-mono-data text-mono-data text-on-surface-variant">Latency (p99)</span>
+<span class="font-mono-data text-mono-data text-on-surface">8.4 ms</span>
+</div>
+<div class="flex justify-between items-center py-xs border-b border-white/5">
+<span class="font-mono-data text-mono-data text-on-surface-variant">Power Draw</span>
+<span class="font-mono-data text-mono-data text-on-surface">2.1 W</span>
+</div>
+<div class="flex justify-between items-center py-xs">
+<span class="font-mono-data text-mono-data text-on-surface-variant">Precision</span>
+<span class="font-mono-data text-mono-data text-on-surface">INT8 Quantized</span>
+</div>
+</div>
+</details>
+<!-- GPU Card -->
+<details class="glass-panel rounded-xl group">
+<summary class="cursor-pointer p-md border-b border-white/5 flex items-center justify-between hover:bg-white/5 transition-colors">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface">developer_board</span>
+<span class="font-headline-sm text-headline-sm">Integrated GPU</span>
+</div>
+<div class="flex items-center gap-sm">
+<span class="font-mono-label text-mono-label px-2 py-1 rounded bg-surface-bright text-on-surface border border-white/10 uppercase">Standby</span>
+<span class="material-symbols-outlined text-on-surface-variant opacity-60 group-open:rotate-180 transition-transform">expand_more</span>
+</div>
+</summary>
+<div class="p-md flex flex-col gap-sm">
+<div class="flex justify-between items-center py-xs border-b border-white/5">
+<span class="font-mono-data text-mono-data text-on-surface-variant">Throughput</span>
+<span class="font-mono-data text-mono-data text-on-surface">65.2 FPS</span>
+</div>
+<div class="flex justify-between items-center py-xs border-b border-white/5">
+<span class="font-mono-data text-mono-data text-on-surface-variant">Latency (p99)</span>
+<span class="font-mono-data text-mono-data text-on-surface">24.1 ms</span>
+</div>
+<div class="flex justify-between items-center py-xs">
+<span class="font-mono-data text-mono-data text-on-surface-variant">Precision</span>
+<span class="font-mono-data text-mono-data text-on-surface">FP16</span>
+</div>
+</div>
+</details>
+<!-- CPU Card -->
+<details class="glass-panel rounded-xl group">
+<summary class="cursor-pointer p-md border-b border-white/5 flex items-center justify-between hover:bg-white/5 transition-colors">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface">developer_mode</span>
+<span class="font-headline-sm text-headline-sm">Host CPU</span>
+</div>
+<div class="flex items-center gap-sm">
+<span class="font-mono-label text-mono-label px-2 py-1 rounded bg-error-container/30 text-error border border-error/20 uppercase">Fallback</span>
+<span class="material-symbols-outlined text-on-surface-variant opacity-60 group-open:rotate-180 transition-transform">expand_more</span>
+</div>
+</summary>
+<div class="p-md flex flex-col gap-sm">
+<div class="flex justify-between items-center py-xs border-b border-white/5">
+<span class="font-mono-data text-mono-data text-on-surface-variant">Active Threads</span>
+<span class="font-mono-data text-mono-data text-on-surface">4 / 8</span>
+</div>
+<div class="flex justify-between items-center py-xs border-b border-white/5">
+<span class="font-mono-data text-mono-data text-on-surface-variant">Usage</span>
+<span class="font-mono-data text-mono-data text-on-surface">12%</span>
+</div>
+<div class="flex justify-between items-center py-xs">
+<span class="font-mono-data text-mono-data text-on-surface-variant">Fallback OPs</span>
+<span class="font-mono-data text-mono-data text-error">1 Detected</span>
+</div>
+</div>
+</details>
+</section>
+<!-- Warning Alert Card -->
+<section class="mt-auto">
+<div class="bg-error-container/10 border border-error/30 backdrop-blur-xl rounded-xl p-md flex gap-md items-start shadow-[inset_0_0_20px_rgba(147,0,10,0.2)]">
+<span class="material-symbols-outlined text-error mt-unit" style="font-variation-settings: 'FILL' 1;">warning</span>
+<div class="flex flex-col gap-xs">
+<span class="font-headline-sm text-headline-sm text-error">Operator Fallback Detected</span>
+<span class="font-mono-data text-mono-data text-on-surface-variant">Conv2D layer fell back to CPU. This indicates missing hardware support for the specific kernel configuration (stride=3) on the target NPU.</span>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="bg-surface-container/70 dark:bg-surface-container/70 backdrop-blur-xl border-t border-white/10 flat no shadows fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-md pb-md pt-sm md:hidden">
+<!-- Inactive: Upload -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant opacity-60 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined mb-xs">cloud_upload</span>
+<span class="font-mono-label text-mono-label uppercase">Upload</span>
+</a>
+<!-- Inactive: Dashboard -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant opacity-60 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined mb-xs">dashboard</span>
+<span class="font-mono-label text-mono-label uppercase">Dashboard</span>
+</a>
+<!-- Active: Results -->
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary font-bold hover:text-primary transition-all scale-95 duration-150 relative" href="#">
+<!-- Active indicator glow -->
+<div class="absolute inset-0 bg-primary/20 blur-md rounded-full -z-10 scale-150"></div>
+<span class="material-symbols-outlined mb-xs" style="font-variation-settings: 'FILL' 1;">analytics</span>
+<span class="font-mono-label text-mono-label uppercase">Results</span>
+</a>
+<!-- Inactive: Code -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant opacity-60 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined mb-xs">code</span>
+<span class="font-mono-label text-mono-label uppercase">Code</span>
+</a>
+</nav>
+<!-- Desktop SideNav (Hidden on mobile, represents the wider nav context requested by system rules) -->
+<aside class="hidden md:flex bg-surface-container-low dark:bg-surface-container-low backdrop-blur-2xl border-r border-white/10 shadow-xl h-full w-72 rounded-r-xl fixed inset-y-0 left-0 z-[60] flex-col py-lg top-16 transition-all duration-200 ease-in-out">
+<div class="px-md mb-lg">
+<div class="flex items-center gap-md mb-sm">
+<div class="w-10 h-10 rounded-full bg-surface-variant flex items-center justify-center overflow-hidden border border-white/10">
+<img class="w-full h-full object-cover" data-alt="A stylized, low-poly generic user avatar silhouette in deep blue and purple hues against a dark gray background, representing a lead system architect in a diagnostic interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJYTbp_b6W94rQwT2q-4AqvldJ03AUQ03rpW1tYWcMd-P42E6USB399M1abaR8qOTdmnNvRexo5xV986GMz82jxtiGdDyCrio4QYCL_Tl1-A3ufI9kZiwFnzuwKtJ4kO4djEJR9cE46214LEoiw5-j8Zpw7CMjI5AGtEtmiohiQsu9uDXsYhs_R4-cXJOemuYG_FiOb4HaosH9dZ3xZVvZghvWNFg1GAwwl7iPZVfy0WNjZRyQ1w7jjw"/>
+</div>
+<div>
+<div class="font-headline-sm text-headline-sm text-on-surface">Lead Architect</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">Project: EdgeBench-01</div>
+</div>
+</div>
+<div class="font-mono-label text-mono-label text-on-surface-variant opacity-50 px-sm">v1.0.4</div>
+</div>
+<nav class="flex flex-col gap-unit">
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-white/5 mx-2 px-md py-sm rounded-lg flex items-center gap-md font-body-md text-body-md transition-colors" href="#">
+<span class="material-symbols-outlined">memory</span>
+                Models
+            </a>
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-white/5 mx-2 px-md py-sm rounded-lg flex items-center gap-md font-body-md text-body-md transition-colors" href="#">
+<span class="material-symbols-outlined">developer_board</span>
+                Hardware
+            </a>
+<!-- Using Active State styling for current context representation, though JSON labels didn't match Results exactly, mapping 'Results' intent to context -->
+<a class="bg-primary-container text-on-primary-container rounded-lg mx-2 px-md py-sm flex items-center gap-md font-body-md text-body-md transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">settings_input_component</span>
+                API Settings
+            </a>
+<a class="text-on-surface-variant hover:text-on-surface hover:bg-white/5 mx-2 px-md py-sm rounded-lg flex items-center gap-md font-body-md text-body-md transition-colors" href="#">
+<span class="material-symbols-outlined">description</span>
+                Documentation
+            </a>
+</nav>
+</aside>
+</body></html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EdgeBench AI - Live Benchmarking</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&amp;family=JetBrains+Mono:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-low": "#181c22",
+                    "inverse-primary": "#005ac2",
+                    "surface-tint": "#adc6ff",
+                    "secondary-fixed": "#e9ddff",
+                    "on-secondary-container": "#c4abff",
+                    "tertiary-fixed": "#ffdcc6",
+                    "surface-container": "#1c2026",
+                    "inverse-on-surface": "#2d3137",
+                    "primary": "#adc6ff",
+                    "on-primary": "#002e6a",
+                    "primary-fixed-dim": "#adc6ff",
+                    "on-secondary-fixed-variant": "#5516be",
+                    "background": "#10141a",
+                    "on-surface": "#dfe2eb",
+                    "surface": "#10141a",
+                    "on-secondary-fixed": "#23005c",
+                    "tertiary-fixed-dim": "#ffb786",
+                    "secondary-fixed-dim": "#d0bcff",
+                    "outline": "#8c909f",
+                    "on-tertiary-fixed-variant": "#723600",
+                    "secondary-container": "#571bc1",
+                    "error-container": "#93000a",
+                    "primary-container": "#4d8eff",
+                    "primary-fixed": "#d8e2ff",
+                    "surface-container-highest": "#31353c",
+                    "on-secondary": "#3c0091",
+                    "secondary": "#d0bcff",
+                    "on-background": "#dfe2eb",
+                    "surface-container-high": "#262a31",
+                    "outline-variant": "#424754",
+                    "surface-bright": "#353940",
+                    "on-surface-variant": "#c2c6d6",
+                    "error": "#ffb4ab",
+                    "on-primary-fixed": "#001a42",
+                    "on-primary-container": "#00285d",
+                    "on-tertiary-fixed": "#311400",
+                    "on-error": "#690005",
+                    "on-error-container": "#ffdad6",
+                    "on-tertiary-container": "#461f00",
+                    "tertiary-container": "#df7412",
+                    "surface-dim": "#10141a",
+                    "inverse-surface": "#dfe2eb",
+                    "surface-container-lowest": "#0a0e14",
+                    "on-primary-fixed-variant": "#004395",
+                    "on-tertiary": "#502400",
+                    "tertiary": "#ffb786",
+                    "surface-variant": "#31353c"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "gutter": "20px",
+                    "xl": "40px",
+                    "container-max": "1440px",
+                    "sm": "8px",
+                    "unit": "4px",
+                    "lg": "24px",
+                    "xs": "4px",
+                    "md": "16px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Geist"],
+                    "mono-data": ["JetBrains Mono"],
+                    "display-lg": ["Geist"],
+                    "body-md": ["Geist"],
+                    "headline-sm": ["Geist"],
+                    "body-sm": ["Geist"],
+                    "mono-label": ["JetBrains Mono"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "mono-data": ["14px", {"lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "500"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-sm": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "mono-label": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body {
+            background-color: #10141a;
+            color: #dfe2eb;
+            overflow-x: hidden;
+        }
+        /* Geometric circuit grid pattern */
+        .bg-grid {
+            background-image: 
+                linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        
+        /* Glass card base */
+        .glass-card {
+            background: rgba(22, 27, 34, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-top: 1px solid rgba(255,255,255,0.12);
+        }
+
+        /* Smooth data update transition */
+        .data-value {
+            transition: all 0.2s ease-out;
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .animate-ring {
+            animation: pulse-ring 3s linear infinite;
+        }
+        .animate-ring-fast {
+            animation: pulse-ring 1.5s linear infinite;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background font-body-md min-h-screen flex flex-col relative antialiased selection:bg-primary selection:text-on-primary">
+<!-- Persistent Background Grid -->
+<div class="fixed inset-0 z-0 bg-grid pointer-events-none"></div>
+<div class="fixed inset-0 z-0 bg-gradient-to-b from-primary/5 to-transparent opacity-50 pointer-events-none"></div>
+<!-- TopAppBar (Mapped from JSON) -->
+<header class="flex justify-between items-center w-full px-lg py-sm fixed top-0 z-50 bg-surface-container/70 dark:bg-surface-container/70 backdrop-blur-xl border-b border-white/10 shadow-none text-on-surface">
+<div class="flex items-center gap-sm font-headline-sm text-headline-sm font-bold tracking-tight text-on-surface">
+<span class="material-symbols-outlined text-primary" data-icon="terminal">terminal</span>
+            EdgeBench AI
+        </div>
+<!-- Desktop Navigation (Responsive pivot from BottomNavBar) -->
+<nav class="hidden md:flex items-center gap-lg">
+<a class="font-mono-label text-mono-label uppercase text-on-surface-variant hover:bg-white/5 transition-colors px-3 py-1 rounded" href="#">
+<span class="flex items-center gap-2"><span class="material-symbols-outlined text-[16px]" data-icon="cloud_upload">cloud_upload</span> Upload</span>
+</a>
+<a class="font-mono-label text-mono-label uppercase text-primary font-bold px-3 py-1 rounded relative" href="#">
+<span class="flex items-center gap-2"><span class="material-symbols-outlined text-[16px]" data-icon="dashboard">dashboard</span> Dashboard</span>
+<span class="absolute bottom-0 left-0 w-full h-[2px] bg-primary rounded-t-sm shadow-[0_-2px_8px_theme(colors.primary)]"></span>
+</a>
+<a class="font-mono-label text-mono-label uppercase text-on-surface-variant hover:bg-white/5 transition-colors px-3 py-1 rounded" href="#">
+<span class="flex items-center gap-2"><span class="material-symbols-outlined text-[16px]" data-icon="analytics">analytics</span> Results</span>
+</a>
+<a class="font-mono-label text-mono-label uppercase text-on-surface-variant hover:bg-white/5 transition-colors px-3 py-1 rounded" href="#">
+<span class="flex items-center gap-2"><span class="material-symbols-outlined text-[16px]" data-icon="code">code</span> Code</span>
+</a>
+</nav>
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-error animate-pulse shadow-[0_0_8px_theme(colors.error)]"></div>
+<span class="font-mono-label text-mono-label tracking-widest text-on-surface">LIVE</span>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 w-full max-w-container-max mx-auto px-lg pt-[80px] pb-[100px] md:pb-xl relative z-10">
+<div class="mb-lg flex flex-col gap-1">
+<h1 class="font-headline-md text-headline-md text-on-surface">Live Telemetry</h1>
+<p class="font-mono-data text-mono-data text-outline">Session: EB-X99-PROD // Status: Benchmarking Active</p>
+</div>
+<!-- Dashboard Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md md:gap-lg">
+<!-- CPU Card -->
+<div class="glass-card rounded-xl p-md flex flex-col gap-lg relative overflow-hidden group hover:bg-white/5 transition-colors duration-300">
+<div class="flex justify-between items-center z-10">
+<div class="flex items-center gap-sm text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="memory">memory</span>
+<span class="font-headline-sm text-headline-sm">CPU Compute</span>
+</div>
+<span class="font-mono-label text-mono-label uppercase bg-surface-variant text-on-surface px-2 py-1 rounded-sm">Stable</span>
+</div>
+<div class="flex flex-col items-center justify-center py-md relative z-10">
+<div class="relative w-40 h-40 flex items-center justify-center">
+<svg class="absolute inset-0 w-full h-full transform -rotate-90" viewbox="0 0 100 100">
+<circle class="text-white/5" cx="50" cy="50" fill="none" r="45" stroke="currentColor" stroke-width="2"></circle>
+<circle class="text-tertiary animate-ring origin-center" cx="50" cy="50" fill="none" r="45" stroke="currentColor" stroke-dasharray="283" stroke-dashoffset="140" stroke-linecap="round" stroke-width="4"></circle>
+</svg>
+<div class="flex flex-col items-center">
+<span class="font-mono-data text-[32px] leading-none font-bold text-on-surface data-value" id="val-cpu">34.5<span class="text-body-sm text-outline font-normal ml-1">ms</span></span>
+<span class="font-mono-label text-mono-label text-outline mt-1">Latency</span>
+</div>
+</div>
+</div>
+<div class="h-16 w-full relative z-10 mt-auto border-t border-white/5 pt-sm">
+<svg class="w-full h-full opacity-50" preserveaspectratio="none" viewbox="0 0 100 30">
+<path class="text-tertiary shadow-[0_0_8px_theme(colors.tertiary)]" d="M0,25 Q10,20 20,25 T40,15 T60,20 T80,10 T100,15" fill="none" stroke="currentColor" stroke-width="1.5"></path>
+<path class="opacity-20" d="M0,25 Q10,20 20,25 T40,15 T60,20 T80,10 T100,15 L100,30 L0,30 Z" fill="url(#grad-tertiary)"></path>
+</svg>
+</div>
+</div>
+<!-- GPU Card (Highlighted Active State) -->
+<div class="glass-card rounded-xl p-md flex flex-col gap-lg relative overflow-hidden group !border-primary shadow-[inset_0_0_40px_rgba(77,142,255,0.15)] bg-surface-container-high/80">
+<!-- Inner Glow Rim -->
+<div class="absolute inset-0 border border-primary/30 rounded-xl pointer-events-none shadow-[inset_0_0_10px_theme(colors.primary/40)]"></div>
+<div class="flex justify-between items-center z-10">
+<div class="flex items-center gap-sm text-primary">
+<span class="material-symbols-outlined" data-icon="developer_board">developer_board</span>
+<span class="font-headline-sm text-headline-sm font-bold">GPU Tensor</span>
+</div>
+<span class="font-mono-label text-mono-label uppercase bg-primary/20 text-primary px-2 py-1 rounded-sm border border-primary/30 animate-pulse">Fastest</span>
+</div>
+<div class="flex flex-col items-center justify-center py-md relative z-10">
+<div class="relative w-48 h-48 flex items-center justify-center">
+<!-- Extra glowing backdrop for active card -->
+<div class="absolute inset-0 bg-primary/10 rounded-full blur-2xl"></div>
+<svg class="absolute inset-0 w-full h-full transform -rotate-90 drop-shadow-[0_0_12px_theme(colors.primary)]" viewbox="0 0 100 100">
+<circle class="text-primary/20" cx="50" cy="50" fill="none" r="45" stroke="currentColor" stroke-width="2"></circle>
+<circle class="text-primary animate-ring-fast origin-center" cx="50" cy="50" fill="none" r="45" stroke="currentColor" stroke-dasharray="283" stroke-dashoffset="40" stroke-linecap="round" stroke-width="6"></circle>
+</svg>
+<div class="flex flex-col items-center">
+<span class="font-mono-data text-[40px] leading-none font-bold text-white drop-shadow-[0_0_8px_theme(colors.primary)] data-value" id="val-gpu">14.2<span class="text-body-sm text-primary font-normal ml-1">ms</span></span>
+<span class="font-mono-label text-mono-label text-primary mt-1">Latency</span>
+</div>
+</div>
+</div>
+<div class="h-16 w-full relative z-10 mt-auto border-t border-primary/20 pt-sm">
+<svg class="w-full h-full" preserveaspectratio="none" viewbox="0 0 100 30">
+<path class="text-primary drop-shadow-[0_0_6px_theme(colors.primary)]" d="M0,15 Q10,25 20,10 T40,5 T60,15 T80,2 T100,8" fill="none" stroke="currentColor" stroke-width="2"></path>
+<path class="opacity-30" d="M0,15 Q10,25 20,10 T40,5 T60,15 T80,2 T100,8 L100,30 L0,30 Z" fill="url(#grad-primary)"></path>
+</svg>
+</div>
+</div>
+<!-- NPU Card -->
+<div class="glass-card rounded-xl p-md flex flex-col gap-lg relative overflow-hidden group hover:bg-white/5 transition-colors duration-300">
+<div class="flex justify-between items-center z-10">
+<div class="flex items-center gap-sm text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="memory_alt">memory_alt</span>
+<span class="font-headline-sm text-headline-sm">NPU Neural</span>
+</div>
+<span class="font-mono-label text-mono-label uppercase bg-surface-variant text-on-surface px-2 py-1 rounded-sm">Syncing</span>
+</div>
+<div class="flex flex-col items-center justify-center py-md relative z-10">
+<div class="relative w-40 h-40 flex items-center justify-center">
+<svg class="absolute inset-0 w-full h-full transform -rotate-90" viewbox="0 0 100 100">
+<circle class="text-white/5" cx="50" cy="50" fill="none" r="45" stroke="currentColor" stroke-width="2"></circle>
+<circle class="text-secondary animate-ring origin-center" cx="50" cy="50" fill="none" r="45" stroke="currentColor" stroke-dasharray="283" stroke-dashoffset="200" stroke-linecap="round" stroke-width="4"></circle>
+</svg>
+<div class="flex flex-col items-center">
+<span class="font-mono-data text-[32px] leading-none font-bold text-on-surface data-value" id="val-npu">28.7<span class="text-body-sm text-outline font-normal ml-1">ms</span></span>
+<span class="font-mono-label text-mono-label text-outline mt-1">Latency</span>
+</div>
+</div>
+</div>
+<div class="h-16 w-full relative z-10 mt-auto border-t border-white/5 pt-sm">
+<svg class="w-full h-full opacity-50" preserveaspectratio="none" viewbox="0 0 100 30">
+<path class="text-secondary shadow-[0_0_8px_theme(colors.secondary)]" d="M0,20 Q10,10 20,15 T40,25 T60,10 T80,20 T100,10" fill="none" stroke="currentColor" stroke-width="1.5"></path>
+<path class="opacity-20" d="M0,20 Q10,10 20,15 T40,25 T60,10 T80,20 T100,10 L100,30 L0,30 Z" fill="url(#grad-secondary)"></path>
+</svg>
+</div>
+</div>
+</div>
+<!-- SVG Gradients for graphs -->
+<svg class="hidden">
+<defs>
+<lineargradient id="grad-primary" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#adc6ff" stop-opacity="1"></stop>
+<stop offset="100%" stop-color="#adc6ff" stop-opacity="0"></stop>
+</lineargradient>
+<lineargradient id="grad-tertiary" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#ffb786" stop-opacity="1"></stop>
+<stop offset="100%" stop-color="#ffb786" stop-opacity="0"></stop>
+</lineargradient>
+<lineargradient id="grad-secondary" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#d0bcff" stop-opacity="1"></stop>
+<stop offset="100%" stop-color="#d0bcff" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+</svg>
+</main>
+<!-- BottomNavBar (Mapped from JSON - Mobile Only per rule) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-md pb-md pt-sm bg-surface-container/70 dark:bg-surface-container/70 backdrop-blur-xl border-t-0 shadow-[0_-1px_0_rgba(255,255,255,0.1)]">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant opacity-60 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="cloud_upload">cloud_upload</span>
+<span class="font-mono-label text-mono-label uppercase">Upload</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary font-bold scale-95 duration-150 relative" href="#">
+<div class="absolute inset-0 bg-primary/20 blur-md rounded-full z-0"></div>
+<span class="material-symbols-outlined mb-1 relative z-10" data-icon="dashboard" data-weight="fill" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-mono-label text-mono-label uppercase relative z-10">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant opacity-60 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="analytics">analytics</span>
+<span class="font-mono-label text-mono-label uppercase">Results</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant opacity-60 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined mb-1" data-icon="code">code</span>
+<span class="font-mono-label text-mono-label uppercase">Code</span>
+</a>
+</nav>
+<!-- Simple script to simulate live fluctuating latency data -->
+<script>
+        function updateData() {
+            const cpu = document.getElementById('val-cpu');
+            const gpu = document.getElementById('val-gpu');
+            const npu = document.getElementById('val-npu');
+
+            // Add slight jitter to base values
+            const cpuVal = (34.5 + (Math.random() * 2 - 1)).toFixed(1);
+            const gpuVal = (14.2 + (Math.random() * 0.5 - 0.25)).toFixed(1); // Tighter variance for fastest
+            const npuVal = (28.7 + (Math.random() * 1.5 - 0.75)).toFixed(1);
+
+            cpu.innerHTML = `${cpuVal}<span class="text-body-sm text-outline font-normal ml-1">ms</span>`;
+            gpu.innerHTML = `${gpuVal}<span class="text-body-sm text-primary font-normal ml-1">ms</span>`;
+            npu.innerHTML = `${npuVal}<span class="text-body-sm text-outline font-normal ml-1">ms</span>`;
+        }
+
+        setInterval(updateData, 800);
+    </script>
+</body></html>

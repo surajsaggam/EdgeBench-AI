@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>EdgeBench AI - Model Upload</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;600;700&amp;family=JetBrains+Mono:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-low": "#181c22",
+                        "inverse-primary": "#005ac2",
+                        "surface-tint": "#adc6ff",
+                        "secondary-fixed": "#e9ddff",
+                        "on-secondary-container": "#c4abff",
+                        "tertiary-fixed": "#ffdcc6",
+                        "surface-container": "#1c2026",
+                        "inverse-on-surface": "#2d3137",
+                        "primary": "#adc6ff",
+                        "on-primary": "#002e6a",
+                        "primary-fixed-dim": "#adc6ff",
+                        "on-secondary-fixed-variant": "#5516be",
+                        "background": "#10141a",
+                        "on-surface": "#dfe2eb",
+                        "surface": "#10141a",
+                        "on-secondary-fixed": "#23005c",
+                        "tertiary-fixed-dim": "#ffb786",
+                        "secondary-fixed-dim": "#d0bcff",
+                        "outline": "#8c909f",
+                        "on-tertiary-fixed-variant": "#723600",
+                        "secondary-container": "#571bc1",
+                        "error-container": "#93000a",
+                        "primary-container": "#4d8eff",
+                        "primary-fixed": "#d8e2ff",
+                        "surface-container-highest": "#31353c",
+                        "on-secondary": "#3c0091",
+                        "secondary": "#d0bcff",
+                        "on-background": "#dfe2eb",
+                        "surface-container-high": "#262a31",
+                        "outline-variant": "#424754",
+                        "surface-bright": "#353940",
+                        "on-surface-variant": "#c2c6d6",
+                        "error": "#ffb4ab",
+                        "on-primary-fixed": "#001a42",
+                        "on-primary-container": "#00285d",
+                        "on-tertiary-fixed": "#311400",
+                        "on-error": "#690005",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary-container": "#461f00",
+                        "tertiary-container": "#df7412",
+                        "surface-dim": "#10141a",
+                        "inverse-surface": "#dfe2eb",
+                        "surface-container-lowest": "#0a0e14",
+                        "on-primary-fixed-variant": "#004395",
+                        "on-tertiary": "#502400",
+                        "tertiary": "#ffb786",
+                        "surface-variant": "#31353c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "20px",
+                        "xl": "40px",
+                        "container-max": "1440px",
+                        "sm": "8px",
+                        "unit": "4px",
+                        "lg": "24px",
+                        "xs": "4px",
+                        "md": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Geist"],
+                        "mono-data": ["JetBrains Mono"],
+                        "display-lg": ["Geist"],
+                        "body-md": ["Geist"],
+                        "headline-sm": ["Geist"],
+                        "body-sm": ["Geist"],
+                        "mono-label": ["JetBrains Mono"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "mono-data": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "500" }],
+                        "display-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "headline-sm": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "mono-label": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+            /* Grid background shader pattern */
+            background-image: 
+                linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+        
+        .glass-panel {
+            background-color: rgba(28, 32, 38, 0.7); /* surface-container approx */
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+            border-left: 1px solid rgba(255, 255, 255, 0.06);
+            border-right: 1px solid rgba(255, 255, 255, 0.06);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .upload-zone {
+            transition: all 0.3s ease;
+        }
+        
+        .upload-zone:hover, .upload-zone.dragover {
+            border-color: theme('colors.primary');
+            background-color: rgba(77, 142, 255, 0.05); /* primary-container very low opacity */
+            box-shadow: inset 0 0 20px rgba(173, 198, 255, 0.1);
+        }
+
+        .upload-icon {
+            text-shadow: 0 0 10px rgba(173, 198, 255, 0.3);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen flex flex-col font-body-md antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-lg py-sm fixed top-0 z-50 bg-surface-container/70 dark:bg-surface-container/70 backdrop-blur-xl border-b border-white/10 docked full-width top-0 text-primary dark:text-primary">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface" data-icon="terminal">terminal</span>
+<h1 class="font-headline-sm text-headline-sm font-bold text-on-surface dark:text-on-surface tracking-tight">EdgeBench AI</h1>
+</div>
+<div>
+<span class="px-sm py-xs rounded-full bg-primary-container/20 text-primary font-mono-label text-mono-label border border-primary/30 uppercase flex items-center gap-xs">
+<span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span>
+                LIVE
+            </span>
+</div>
+</header>
+<!-- NavigationDrawer (Hidden on Mobile, Visible on Desktop) -->
+<nav class="hidden md:flex fixed inset-y-0 left-0 z-[60] flex-col py-lg bg-surface-container-low dark:bg-surface-container-low backdrop-blur-2xl h-full w-72 rounded-r-xl border-r border-white/10 shadow-xl mt-[65px]">
+<!-- Profile Header -->
+<div class="px-lg pb-lg border-b border-white/10 mb-md flex flex-col gap-sm">
+<div class="w-12 h-12 rounded-full bg-surface-container-high border border-white/10 overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A macro shot of a sleek, dark metallic silicon wafer with subtle glowing blue traces, representing advanced technology and precision engineering in a dark mode studio environment. High contrast, technical aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBEdvmeFXAZiIlcizE8ZNsaZL0uPOjW-CBbv46r4Ana4Ylp12t8GWV_TquJNIRRFx63qcTraTcVYAgZtj5_N9a1YufLHgb7CTZWzuzQiBQCf8J0uWAwelSlFS8onZL6-6F3AGJT3XE3eJ9L1kXo9iFriblE0Ie4PGxrXMBEbqk9IUJSZV_TPDuVZlsN73f2Ls1hTl6sCkQRZfN5LrvIyXW7PyU6e0eh4lcUx7RUdJ1MDyFofubkjq2Vjg"/>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Lead Architect</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Project: EdgeBench-01</p>
+<p class="font-mono-label text-mono-label text-outline mt-xs">v1.0.4</p>
+</div>
+</div>
+<!-- Navigation Links -->
+<div class="flex flex-col gap-unit px-sm">
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:text-on-surface mx-2 hover:bg-white/5 transition-all duration-200 ease-in-out rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="memory">memory</span>
+<span class="font-body-md text-body-md">Models</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:text-on-surface mx-2 hover:bg-white/5 transition-all duration-200 ease-in-out rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="developer_board">developer_board</span>
+<span class="font-body-md text-body-md">Hardware</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:text-on-surface mx-2 hover:bg-white/5 transition-all duration-200 ease-in-out rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="settings_input_component">settings_input_component</span>
+<span class="font-body-md text-body-md">API Settings</span>
+</a>
+<a class="flex items-center gap-md px-md py-sm text-on-surface-variant hover:text-on-surface mx-2 hover:bg-white/5 transition-all duration-200 ease-in-out rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="description">description</span>
+<span class="font-body-md text-body-md">Documentation</span>
+</a>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="flex-1 pt-[80px] pb-[80px] md:pb-lg md:ml-72 px-lg max-w-container-max mx-auto w-full">
+<div class="max-w-3xl mx-auto flex flex-col gap-lg mt-xl">
+<!-- Upload Module -->
+<section class="glass-panel rounded-xl p-md flex flex-col gap-md">
+<div class="flex justify-between items-center pb-sm border-b border-white/5">
+<h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary">data_object</span>
+                        Model Ingestion
+                    </h2>
+<span class="px-sm py-xs rounded bg-surface-container-high text-outline font-mono-label text-mono-label border border-white/5">READY</span>
+</div>
+<!-- Drag & Drop Zone -->
+<div class="upload-zone border-2 border-dashed border-outline-variant rounded-lg p-xl flex flex-col items-center justify-center min-h-[300px] cursor-pointer relative overflow-hidden group" id="drop-zone">
+<div class="absolute inset-0 bg-gradient-to-b from-transparent to-primary-container/5 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"></div>
+<span class="material-symbols-outlined text-[64px] text-primary mb-md upload-icon" data-icon="cloud_upload" style="font-variation-settings: 'FILL' 0, 'wght' 200;">cloud_upload</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-xs">Drop .tflite or .onnx models here</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-center max-w-sm mb-lg">
+                        Files will be automatically parsed and queued for edge hardware compilation.
+                    </p>
+<button class="px-lg py-sm rounded-lg bg-gradient-to-r from-blue-500 to-violet-500 text-white font-mono-data text-mono-data hover:shadow-[0_0_0_1px_theme('colors.primary')] transition-all">
+                        BROWSE FILES
+                    </button>
+<input accept=".tflite,.onnx" class="hidden" id="file-upload" type="file"/>
+</div>
+</section>
+<!-- Recent Models Module -->
+<section class="glass-panel rounded-xl p-md flex flex-col gap-sm">
+<h3 class="font-mono-label text-mono-label text-outline uppercase tracking-widest pb-xs border-b border-white/5 mb-sm">Recent Models</h3>
+<div class="flex flex-col gap-unit">
+<!-- File Item 1 -->
+<div class="flex items-center justify-between p-sm rounded bg-surface-container-high/50 border border-transparent hover:border-white/5 hover:bg-surface-container-high transition-colors group">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded flex items-center justify-center bg-surface-container-lowest border border-white/10">
+<span class="material-symbols-outlined text-secondary" data-icon="description">description</span>
+</div>
+<div>
+<p class="font-mono-data text-mono-data text-on-surface">resnet_v2.tflite</p>
+<div class="flex items-center gap-sm mt-xs">
+<span class="font-mono-label text-mono-label text-on-surface-variant opacity-60">24.5 MB</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="font-mono-label text-mono-label text-[#86efac] bg-[#064e3b]/50 px-unit py-[2px] rounded border border-[#064e3b]">COMPILED</span>
+</div>
+</div>
+</div>
+<button class="opacity-0 group-hover:opacity-100 text-outline hover:text-primary p-unit rounded transition-all">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+<!-- File Item 2 -->
+<div class="flex items-center justify-between p-sm rounded bg-surface-container-high/50 border border-transparent hover:border-white/5 hover:bg-surface-container-high transition-colors group">
+<div class="flex items-center gap-md">
+<div class="w-10 h-10 rounded flex items-center justify-center bg-surface-container-lowest border border-white/10">
+<span class="material-symbols-outlined text-secondary" data-icon="description">description</span>
+</div>
+<div>
+<p class="font-mono-data text-mono-data text-on-surface">mobilenet_ssd.onnx</p>
+<div class="flex items-center gap-sm mt-xs">
+<span class="font-mono-label text-mono-label text-on-surface-variant opacity-60">18.2 MB</span>
+<span class="w-1 h-1 rounded-full bg-outline-variant"></span>
+<span class="font-mono-label text-mono-label text-[#93c5fd] bg-[#1e3a8a]/50 px-unit py-[2px] rounded border border-[#1e3a8a]">QUEUED</span>
+</div>
+</div>
+</div>
+<button class="opacity-0 group-hover:opacity-100 text-outline hover:text-primary p-unit rounded transition-all">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- BottomNavBar (Visible on Mobile, Hidden on Desktop) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-md pb-md pt-sm bg-surface-container/70 dark:bg-surface-container/70 backdrop-blur-xl border-t border-white/10 docked full-width bottom-0 text-primary dark:text-primary">
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary font-bold hover:text-primary transition-all scale-95 duration-150" href="#">
+<span class="material-symbols-outlined mb-unit" data-icon="cloud_upload" style="font-variation-settings: 'FILL' 1;">cloud_upload</span>
+<span class="font-mono-label text-mono-label uppercase">Upload</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant opacity-60 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined mb-unit" data-icon="dashboard">dashboard</span>
+<span class="font-mono-label text-mono-label uppercase">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant opacity-60 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined mb-unit" data-icon="analytics">analytics</span>
+<span class="font-mono-label text-mono-label uppercase">Results</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant opacity-60 hover:text-primary transition-all" href="#">
+<span class="material-symbols-outlined mb-unit" data-icon="code">code</span>
+<span class="font-mono-label text-mono-label uppercase">Code</span>
+</a>
+</nav>
+<script>
+        // Simple drag and drop interaction logic
+        const dropZone = document.getElementById('drop-zone');
+        
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight(e) {
+            dropZone.classList.add('dragover');
+        }
+
+        function unhighlight(e) {
+            dropZone.classList.remove('dragover');
+        }
+    </script>
+</body></html>
