@@ -1,15 +1,21 @@
 "use client";
 
 import { useState } from "react";
+import { useBenchmark } from "@/context/BenchmarkContext";
 
 export default function CodeOutputPage() {
   const [showToast, setShowToast] = useState(false);
+  const { selectedModelName } = useBenchmark();
 
   // In a real app this would be derived from the highest scored DFS backend
   const bestBackend = "NPU";
   const acceleratorClass = bestBackend === "NPU" ? "NPUAccelerator" : "GPUAccelerator";
   const precision = bestBackend === "NPU" ? "INT8 Quantized" : "FP16";
   const targetName = bestBackend === "NPU" ? "ARM Mali-G710 MC10" : "Integrated GPU";
+
+  // Format the model name by removing extensions
+  const rawModelName = selectedModelName || "mobilenet_v2.tflite";
+  const formattedModelName = rawModelName.replace(/\.(tflite|onnx)$/i, '');
 
   const generatedCode = `
 package com.edgebench.ai.runtime
@@ -24,11 +30,11 @@ import com.edgebench.hardware.${acceleratorClass}
  */
 class EdgeBenchInitializer {
 
-    private val modelId = "eb-01-vision-core"
+    private val modelId = "${formattedModelName}"
     
     fun initializeEngine() {
         val config = ModelConfig.Builder()
-            .setModelPath("assets/models/\${modelId}.tflite")
+            .setModelPath("assets/models/$" + "{modelId}.tflite")
             .setAccelerator(${acceleratorClass}.getDefault())
             .setQuantization(${bestBackend === "NPU" ? "true" : "false"})
             .setThreadCount(4)
@@ -38,18 +44,39 @@ class EdgeBenchInitializer {
         try {
             val engine = InferenceEngine.create(config)
             engine.warmup(iterations = 10)
-            Logger.i("EdgeBench", "Model loaded and warmed up successfully in \${engine.initTimeMs}ms")
+            Logger.i("EdgeBench", "Model loaded and warmed up successfully in $" + "{engine.initTimeMs}ms")
         } catch (e: Exception) {
-            Logger.e("EdgeBench", "Failed to initialize neural engine: \${e.message}")
+            Logger.e("EdgeBench", "Failed to initialize neural engine: $" + "{e.message}")
         }
     }
 }
 `.trim();
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(generatedCode);
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 3000);
+  const handleCopy = async () => {
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(generatedCode);
+      } else {
+        // Fallback for non-secure contexts (e.g., HTTP IP address access)
+        const textArea = document.createElement("textarea");
+        textArea.value = generatedCode;
+        textArea.style.position = "absolute";
+        textArea.style.left = "-999999px";
+        document.body.prepend(textArea);
+        textArea.select();
+        try {
+          document.execCommand("copy");
+        } catch (error) {
+          console.error("Fallback copy failed", error);
+        } finally {
+          textArea.remove();
+        }
+      }
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 3000);
+    } catch (error) {
+      console.error("Copy failed", error);
+    }
   };
 
   return (
@@ -93,10 +120,10 @@ class EdgeBenchInitializer {
                 {`/**\n * Auto-generated model initialization block.\n * Target: ${targetName}\n * Precision: ${precision}\n */`}
               </span>{"\n"}
               <span className="text-secondary">class</span> <span className="text-primary">EdgeBenchInitializer</span> {"{\n\n"}
-              {"    "}<span className="text-secondary">private val</span> modelId <span className="text-on-surface-variant">=</span> <span className="text-tertiary">"eb-01-vision-core"</span>{"\n    \n"}
+              {"    "}<span className="text-secondary">private val</span> modelId <span className="text-on-surface-variant">=</span> <span className="text-tertiary">&quot;{formattedModelName}&quot;</span>{"\n    \n"}
               {"    "}<span className="text-secondary">fun</span> <span className="text-primary">initializeEngine</span>() {"{\n"}
               {"        "}<span className="text-secondary">val</span> config <span className="text-on-surface-variant">=</span> ModelConfig.<span className="text-primary">Builder</span>(){"\n"}
-              {"            "}.<span className="text-primary">setModelPath</span>(<span className="text-tertiary">"assets/models/\${modelId}.tflite"</span>){"\n"}
+              {"            "}.<span className="text-primary">setModelPath</span>(<span className="text-tertiary">{`"assets/models/\${modelId}.tflite"`}</span>){"\n"}
               {"            "}.<span className="text-primary">setAccelerator</span>({acceleratorClass}.<span className="text-primary">getDefault</span>()){"\n"}
               {"            "}.<span className="text-primary">setQuantization</span>(<span className="text-secondary">{bestBackend === "NPU" ? "true" : "false"}</span>){"\n"}
               {"            "}.<span className="text-primary">setThreadCount</span>(<span className="text-tertiary">4</span>){"\n"}
@@ -105,9 +132,9 @@ class EdgeBenchInitializer {
               {"        "}<span className="text-secondary">try</span> {"{\n"}
               {"            "}<span className="text-secondary">val</span> engine <span className="text-on-surface-variant">=</span> InferenceEngine.<span className="text-primary">create</span>(config){"\n"}
               {"            "}engine.<span className="text-primary">warmup</span>(iterations <span className="text-on-surface-variant">=</span> <span className="text-tertiary">10</span>){"\n"}
-              {"            "}Logger.<span className="text-primary">i</span>(<span className="text-tertiary">"EdgeBench"</span>, <span className="text-tertiary">"Model loaded and warmed up successfully in \${engine.initTimeMs}ms"</span>){"\n"}
+              {"            "}Logger.<span className="text-primary">i</span>(<span className="text-tertiary">&quot;EdgeBench&quot;</span>, <span className="text-tertiary">{`"Model loaded and warmed up successfully in \${engine.initTimeMs}ms"`}</span>){"\n"}
               {"        "} {"}"} <span className="text-secondary">catch</span> (e: Exception) {"{\n"}
-              {"            "}Logger.<span className="text-primary">e</span>(<span className="text-tertiary">"EdgeBench"</span>, <span className="text-tertiary">"Failed to initialize neural engine: \${e.message}"</span>){"\n"}
+              {"            "}Logger.<span className="text-primary">e</span>(<span className="text-tertiary">&quot;EdgeBench&quot;</span>, <span className="text-tertiary">{`"Failed to initialize neural engine: \${e.message}"`}</span>){"\n"}
               {"        "} {"}\n    }\n}"}
             </code>
           </pre>

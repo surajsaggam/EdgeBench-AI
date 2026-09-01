@@ -1,11 +1,14 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useBenchmark } from "@/context/BenchmarkContext";
 
 export default function ModelUploadPage() {
   const [isDragging, setIsDragging] = useState(false);
   const router = useRouter();
+  const { setSelectedModelName, setBenchmarkStatus } = useBenchmark();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault();
@@ -17,13 +20,27 @@ export default function ModelUploadPage() {
     }
   }, []);
 
+  const handleFile = (file: File) => {
+    setSelectedModelName(file.name);
+    setBenchmarkStatus("idle");
+    router.push("/benchmark");
+  };
+
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
-    // In a real app, process files here
-    router.push("/benchmark");
-  }, [router]);
+    
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      handleFile(e.dataTransfer.files[0]);
+    }
+  }, [router, setSelectedModelName, setBenchmarkStatus]);
+
+  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      handleFile(e.target.files[0]);
+    }
+  };
 
   return (
     <div className="max-w-3xl mx-auto flex flex-col gap-lg mt-xl">
@@ -48,11 +65,15 @@ export default function ModelUploadPage() {
           onDragLeave={handleDrag}
           onDragOver={handleDrag}
           onDrop={handleDrop}
-          onClick={() => {
-            // Demo default model trigger
-            router.push("/benchmark");
-          }}
+          onClick={() => fileInputRef.current?.click()}
         >
+          <input 
+            type="file" 
+            ref={fileInputRef} 
+            className="hidden" 
+            accept=".tflite,.onnx" 
+            onChange={handleFileInput} 
+          />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent to-primary-container/5 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity"></div>
           <span
             className="material-symbols-outlined text-[64px] text-primary mb-md upload-icon"
@@ -64,9 +85,15 @@ export default function ModelUploadPage() {
             Drop .tflite or .onnx models here
           </h3>
           <p className="text-sm text-on-surface-variant text-center max-w-sm mb-lg">
-            Files will be automatically parsed and queued for edge hardware compilation. Or click to load MobileNetV2 demo.
+            Files will be automatically parsed and queued for edge hardware compilation. Or click to browse.
           </p>
-          <button className="px-lg py-sm rounded-lg bg-primary-gradient text-white font-mono text-sm hover:shadow-glow transition-all">
+          <button 
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              fileInputRef.current?.click();
+            }}
+            className="px-lg py-sm rounded-lg bg-primary-gradient text-white font-mono text-sm hover:shadow-glow transition-all">
             BROWSE FILES
           </button>
         </div>

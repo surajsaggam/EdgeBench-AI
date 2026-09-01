@@ -3,17 +3,18 @@
 import { computeDFS } from "@/lib/scoring";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useBenchmark } from "@/context/BenchmarkContext";
 
 export default function ResultsPage() {
   const router = useRouter();
+  const { benchmarkMetrics, benchmarkStatus } = useBenchmark();
   
-  // Simulate fetching data from the benchmark run
-  // In a real app this would be in Context or Zustand
-  const [metrics, setMetrics] = useState({
+  // Use context metrics or fallback to default simulation if jumped straight to /results
+  const metrics = benchmarkMetrics || {
     npu: { latency: 28.7, jitter: 1.2 },
     gpu: { latency: 14.2, jitter: 2.1 },
     cpu: { latency: 34.5, jitter: 4.5 },
-  });
+  };
 
   const [openDetail, setOpenDetail] = useState<string | null>("npu");
   
@@ -180,7 +181,12 @@ export default function ResultsPage() {
       <div className="flex justify-center mt-lg pb-xl">
         <button 
           onClick={() => router.push("/code")}
-          className="px-lg py-sm rounded-lg bg-primary text-on-primary hover:opacity-90 transition-opacity font-mono text-sm font-bold shadow-glow">
+          disabled={benchmarkStatus === "running"}
+          className={`px-lg py-sm rounded-lg font-mono text-sm font-bold shadow-glow transition-all ${
+            benchmarkStatus !== "running" 
+            ? "bg-primary text-on-primary hover:opacity-90 cursor-pointer" 
+            : "bg-surface-container-high text-outline opacity-50 cursor-not-allowed"
+          }`}>
           GENERATE DELEGATE CODE
         </button>
       </div>
