@@ -43,7 +43,7 @@ When models fall back to the CPU, it causes **massive battery drain, thermal thr
 EdgeBench AI maps directly to a clean, 4-step pipeline that guarantees developers get exactly what they need in seconds.
 
 ```mermaid
-graph LR
+graph TD
     A[Upload Model\n.tflite / .onnx] -->|React Context| B(Live Telemetry)
     B -->|WebGL / WASM| C{Hardware Stress Test}
     C -->|GPU Tensor Math| D[Calculate DFS]
